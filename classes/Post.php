@@ -6,12 +6,26 @@ include_once("../Traits/Validator.php");
 class Post
 {
     use Validator;
+    private $title;
+    private $content;
+    private $author;
     private $conn;
 
-    public function __construct()
+    // ======> Post class constructor <====== //
+    public function __construct($title = null, $content = null, $author = null)
     {
         $database = new Database();
         $this->conn = $database->connect();
+
+        if ($title !== null) {
+            $this->title = $this->test_input($title);
+        }
+        if ($content !== null) {
+            $this->content = $this->test_input($content);
+        }
+        if ($author !== null) {
+            $this->author = $this->test_input($author);
+        }
     }
 
     // ======> List all posts method <====== //
