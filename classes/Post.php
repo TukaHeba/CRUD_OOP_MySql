@@ -30,21 +30,35 @@ class Post
 
     // ======> List all posts method <====== //
     // 1- selecting the records and order them by created_at in descending order
-    // 2- Execute the query and return the result as an associative array
-    // 3- Check if the query was successful
-    public function listAll()
+    // 2- Add a condition to the query if a title or author filter is provided
+    // 3- Execute the query and return the result as an associative array
+    // 4- Check if the query was successful
+    public function listAll($title = '', $author = '')
     {
-        $query = "SELECT * FROM posts ORDER BY created_at DESC";
-
+        $title = $this->conn->real_escape_string($title);
+        $author = $this->conn->real_escape_string($author);
+        
+        $query = "SELECT * FROM posts WHERE 1=1";
+    
+        if ($title) {
+            $query .= " AND title LIKE '%$title%'";
+        }
+    
+        if ($author) {
+            $query .= " AND author LIKE '%$author%'";
+        }
+    
+        $query .= " ORDER BY created_at DESC";
+    
         $result = $this->conn->query($query);
-
+    
         if ($result) {
             return $result->fetch_all(MYSQLI_ASSOC);
         } else {
             return [];
         }
     }
-
+    
     // ======> Read post method <====== //
     // 1- Select a post by its id
     // 2- Execute the prepared SQL statement

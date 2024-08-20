@@ -1,3 +1,16 @@
+<?php
+include_once("../classes/Database.php");
+include_once("../classes/Post.php");
+
+$post = new Post();
+
+// Get filtering parameters from query string
+$title = isset($_GET['title']) ? $_GET['title'] : '';
+$author = isset($_GET['author']) ? $_GET['author'] : '';
+
+$rows = $post->listAll($title, $author);
+$i = 1;
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +18,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
     <title>My Blog</title>
 </head>
 
@@ -19,6 +31,12 @@
     <div class="container-fluid">
 
         <h2>All Posts</h2>
+
+        <form class="d-flex mb-3" method="GET" action="">
+            <input class="form-control me-2" type="text" name="title" placeholder="Search by title" value="<?php echo htmlspecialchars($title); ?>" aria-label="Search Title">
+            <input class="form-control me-2" type="text" name="author" placeholder="Search by author" value="<?php echo htmlspecialchars($author); ?>" aria-label="Search Author">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
 
         <table class="table">
             <thead>
@@ -34,22 +52,16 @@
             </thead>
             <tbody>
                 <?php
-                include_once("../classes/Database.php");
-                include_once("../classes/Post.php");
-
-                $post = new Post();
-                $rows = $post->listAll();
-                $i = 1;
                 if (!empty($rows)) {
                     foreach ($rows as $row) {
                 ?>
                         <tr>
                             <td><?php echo $i++; ?></td>
-                            <td><?php echo $row['title']; ?></td>
-                            <td><?php echo $row['content']; ?></td>
-                            <td><?php echo $row['author']; ?></td>
-                            <td><?php echo $row['created_at']; ?></td>
-                            <td><?php echo $row['updated_at']; ?></td>
+                            <td><?php echo htmlspecialchars($row['title']); ?></td>
+                            <td><?php echo htmlspecialchars($row['content']); ?></td>
+                            <td><?php echo htmlspecialchars($row['author']); ?></td>
+                            <td><?php echo htmlspecialchars($row['created_at']); ?></td>
+                            <td><?php echo htmlspecialchars($row['updated_at']); ?></td>
                             <td>
                                 <a class="btn btn-outline-dark" href="view_post.php?id=<?php echo $row['id']; ?>">View</a>
                                 <a class="btn btn-outline-warning" href="edit_post.php?id=<?php echo $row['id']; ?>">Edit</a>
