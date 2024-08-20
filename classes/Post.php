@@ -32,6 +32,9 @@ class Post
     }
 
     // ======> Read post method <====== //
+    // 1- Select a post by its id
+    // 2- Execute the prepared SQL statement
+    // 3- Get the result of and fetch in array
     public function read($id)
     {
         $stmt = $this->conn->prepare("SELECT * FROM posts WHERE id = ?");
@@ -41,6 +44,9 @@ class Post
     }
 
     // ======> Create post method <====== //
+    // 1- Sanitize and validate inputs
+    // 2- Check if all validation rules have passed 
+    // 3- Execute the SQL statement and return the result
     public function create($title, $content, $author)
     {
         $title = $this->test_input($title);
